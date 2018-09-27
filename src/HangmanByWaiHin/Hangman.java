@@ -84,9 +84,15 @@ public class Hangman {
                     {
                         System.out.println("How much times does your letter appear?");
                         int numTimes = scanner.nextInt();
+                        System.out.println("Where do the letters appear? Type in a number greater than 1(i.e. A _ A _ would be 1,3).");
+                        String positions = scanner.next();
                         for(int i = 0; i > numTimes; i++)
                         {
-                            
+                            if(positions.indexOf(",") > 0)
+                            {
+                                int num1 = Integer.parseInt(positions.substring(0,positions.indexOf(",")+1));
+                                positions = positions.substring(0,positions.indexOf(",")+1);
+                            }
                         }
                     }
                 }
