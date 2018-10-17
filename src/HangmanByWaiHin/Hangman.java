@@ -10,8 +10,6 @@ public class Hangman {
         boolean gameRunning = true;
         while(gameRunning)
         {
-            try
-            {
                 System.out.println("Choose your game mode. 1 for Solo, 2 for 2-Player");
                 int gamemode = scanner.nextInt();
                 if(gamemode == 1)
@@ -78,44 +76,53 @@ public class Hangman {
                             word += "_ ";
                         }
                         System.out.println(word);
-                        if(tries > 0)
+                        while(gameRunning == true)
                         {
-                            String alphabet = "abcdefghijklmnopqrstuvwxyz";
-                            rndNum = Math.floor(Math.random() * 25) + 0;
-                            int rnd = (int)rndNum;
-                            String guess = alphabet.substring(rnd, rnd + 1);
-                            alphabet = alphabet.substring(0,rnd) + alphabet.substring(rnd);
-                            System.out.println("Is " + guess + " a letter in your word? Type in y for yes and n for no.");
-                            String response = scanner.next().substring(0,1).toLowerCase();
-                            if(word.contains("_"))
+                            if(word.contains("_") && tries > 0)
                             {
-                                if(response.equals("y"))
+                                String alphabet = "abcdefghijklmnopqrstuvwxyz";
+                                rndNum = Math.floor(Math.random() * 25) + 0;
+                                int rnd = (int)rndNum;
+                                String guess = alphabet.substring(rnd, rnd + 1);
+                                alphabet = alphabet.substring(0,rnd) + alphabet.substring(rnd);
+                                System.out.println("Is " + guess + " a letter in your word? Type in y for yes and n for no.");
+                                String response = scanner.next().substring(0,1).toLowerCase();
+                                if(word.contains("_"))
                                 {
-                                    System.out.println("Where do the letters appear? Type in a number greater than 0(i.e. A _ A _ would be 1,3).");
-                                    String positions = scanner.next();
-                                    while(positions.contains(","))
+                                    if(response.equals("y"))
                                     {
-                                        int num1 = Integer.parseInt(positions.substring(0, positions.indexOf(",") + 1));
-                                        positions = positions.substring(0, positions.indexOf(",") + 1);
-                                        word = word.substring(0, num1) + word.substring(num1).replaceFirst("_", guess);
+                                        System.out.println("Where do the letters appear? Type in a number greater than 0(i.e. A _ A _ would be 1,3).");
+                                        String positions = scanner.next();
+                                        while(positions.contains(","))
+                                        {
+                                            int num1 = Integer.parseInt(positions.substring(0, positions.indexOf(",")));
+                                            positions = positions.substring(positions.indexOf(",")+1);
+                                            word = word.substring(0, num1-1) + word.substring(num1-1).replaceFirst("_", guess);
+                                        }
+                                        word = word.substring(0, Integer.parseInt(positions) - 1) + word.substring(Integer.parseInt(positions)-1).replaceFirst("_", guess);
+                                        System.out.println(word);
                                     }
-                                    word = word.substring(0, Integer.parseInt(positions)) + word.substring(Integer.parseInt(positions)).replaceFirst("_", guess);
-                                }
-                                else
-                                {
-                                    tries--;
+                                    else
+                                    {
+                                        tries--;
+                                    }
                                 }
                             }
-                            else
+                            else if (tries <= 0)
                             {
-                                System.out.println("The AI has guessed your word. Your word was " + word + " . Good Game.");
+                                System.out.println("Congratulations! You won. The AI used all it's attempts but couldn't find your word.");
                                 gameRunning = false;
                             }
-                        }
-                        else
-                        {
-                            System.out.println("Congratulations! You won. The AI used all it's attempts but couldn't find your word.");
-                            gameRunning = false;
+                            else if (!word.contains("_"))
+                            {
+                                String noSpacesWord = "";
+                                for(int i = 0; i < word.length(); i+=2)
+                                {
+                                    noSpacesWord += word.substring(i,i+1);
+                                }
+                                System.out.println("The AI has guessed your word. Your word was " + noSpacesWord + " . Good Game.");
+                                gameRunning = false;
+                            }
                         }
                     }
                 }
@@ -124,11 +131,5 @@ public class Hangman {
                     System.out.println("WIP");
                 }
             }
-            catch(InputMismatchException e)
-            {
-                System.out.println("You entered an incorrect input therefore the program will reset.");
-                String hold = scanner.next();
-            }
         }
     }
-}
